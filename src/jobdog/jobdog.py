@@ -4,18 +4,18 @@ from .exceptions import FetchError
 from .logger import logger
 
 class JobDog:
-    def __init__(self, impersonate: str = "chrome124", proxy: Optional[str] = None, headers: Optional[Dict[str, str]] = None, timeout: int = 30) -> None:
+    def __init__(self, impersonate: str = "chrome124", proxies: Optional[Dict[str, str]] = None, headers: Optional[Dict[str, str]] = None, timeout: int = 30) -> None:
         self.impersonate = impersonate
-        self.proxy = proxy
+        self.proxies = proxies or {}
         self.headers = headers or {}
         self.timeout = timeout
         self.session = self._create_session()
 
     def _create_session(self) -> requests.Session:
-        logger.info(f"Creating session with impersonate: {self.impersonate}, proxy: {self.proxy}, headers: {self.headers}, timeout: {self.timeout}")
+        logger.info(f"Creating session with impersonate: {self.impersonate}, proxies: {self.proxies}, headers: {self.headers}, timeout: {self.timeout}")
         return requests.Session(
             impersonate=self.impersonate,
-            proxies={'http': self.proxy, 'https': self.proxy} if self.proxy else None,
+            proxies=self.proxies,
             headers=self.headers,
             timeout=self.timeout
         )
@@ -34,8 +34,8 @@ class JobDog:
         self.impersonate = impersonate
         self.session = self._create_session()
 
-    def set_proxy(self, proxy: Optional[str]) -> None:
-        self.proxy = proxy
+    def set_proxies(self, proxies: Dict[str, str]) -> None:
+        self.proxies = proxies
         self.session = self._create_session()
 
     def set_headers(self, headers: Dict[str, str]) -> None:
