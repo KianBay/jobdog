@@ -6,14 +6,14 @@ from unittest.mock import patch, MagicMock
 def test_jobdog_initialization():
     dog = JobDog()
     assert dog.impersonate == "chrome124"
-    assert dog.proxy is None
+    assert dog.proxies == {}
     assert dog.headers == {}
     assert dog.timeout == 30
 
 def test_jobdog_custom_initialization():
-    dog = JobDog(impersonate="firefox110", proxy="http://myproxy:8080", headers={"User-Agent": "MyBot"}, timeout=60)
+    dog = JobDog(impersonate="firefox110", proxies={"http": "http://myproxy:8080", "https": "http://myproxy:8080"}, headers={"User-Agent": "MyBot"}, timeout=60)
     assert dog.impersonate == "firefox110"
-    assert dog.proxy == "http://myproxy:8080"
+    assert dog.proxies == {"http": "http://myproxy:8080", "https": "http://myproxy:8080"}
     assert dog.headers == {"User-Agent": "MyBot"}
     assert dog.timeout == 60
 
@@ -44,8 +44,8 @@ def test_set_impersonate():
 
 def test_set_proxy():
     dog = JobDog()
-    dog.set_proxy("http://newproxy:8080")
-    assert dog.proxy == "http://newproxy:8080"
+    dog.set_proxies({"http": "http://newproxy:8080", "https": "http://newproxy:8080"})
+    assert dog.proxies == {"http": "http://newproxy:8080", "https": "http://newproxy:8080"}
 
 def test_set_headers():
     dog = JobDog()
