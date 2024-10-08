@@ -1,5 +1,6 @@
 import pytest
 from jobdog.jobdog import JobDog
+from jobdog.models.job_listing import JobListing
 from jobdog.exceptions import FetchError
 from unittest.mock import patch, MagicMock
 
@@ -17,16 +18,24 @@ def test_jobdog_custom_initialization():
     assert dog.headers == {"User-Agent": "MyBot"}
     assert dog.timeout == 60
 
+@patch('jobdog.jobdog.get_parser')
 @patch('jobdog.jobdog.requests.Session')
-def test_fetch_details_success(mock_session):
+def test_fetch_details_success(mock_session, mock_get_parser):
     mock_response = MagicMock()
     mock_response.text = "<html>Job details</html>"
     mock_session.return_value.get.return_value = mock_response
 
+    mock_parser = MagicMock()
+    mock_parser.sanitize_url.return_value = "https://example.com/job/123"
+    mock_parser.parse_html.return_value = JobListing(job_title="Likeable Superhero", company_name="NotVought", job_description="You will not be evil", job_listing_url="https://example.com/job/123")
+    mock_get_parser.return_value = mock_parser
     dog = JobDog()
     result = dog.fetch_details("https://example.com/job/123")
     
-    assert result == {"url": "https://example.com/job/123", "content": "<html>Job details</html>"}
+    assert result.job_title == "Likeable Superhero"
+    assert result.company_name == "NotVought"
+    assert result.job_description == "You will not be evil"
+    assert result.job_listing_url == "https://example.com/job/123"
     mock_session.return_value.get.assert_called_once_with("https://example.com/job/123")
 
 @patch('jobdog.jobdog.requests.Session')

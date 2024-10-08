@@ -4,7 +4,7 @@ from .exceptions import FetchError
 from .logger import logger
 from .models.job_listing import JobListing
 from .providers.utils import get_parser
-from .providers.base_parser import BaseParser
+from .providers.base import BaseParser
 
 class JobDog:
     def __init__(self, impersonate: str = "chrome124", proxies: Optional[Dict[str, str]] = None, headers: Optional[Dict[str, str]] = None, timeout: int = 30) -> None:

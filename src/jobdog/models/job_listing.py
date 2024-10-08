@@ -36,6 +36,6 @@ class JobListing(BaseModel):
     apply_url: Optional[HttpUrl] = None
     job_posting_date: Optional[str] = None
     job_expiry_date: Optional[str] = None
-    skills: Optional[List[str]] = None
+    skills: Optional[list[str]] = None
     industry: Optional[str] = None
     
