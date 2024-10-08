@@ -2,6 +2,9 @@ from typing import Optional, Dict
 from curl_cffi import requests
 from .exceptions import FetchError
 from .logger import logger
+from .models.job_listing import JobListing
+from .providers.utils import get_parser
+from .providers.base_parser import BaseParser
 
 class JobDog:
     def __init__(self, impersonate: str = "chrome124", proxies: Optional[Dict[str, str]] = None, headers: Optional[Dict[str, str]] = None, timeout: int = 30) -> None:
@@ -20,12 +23,16 @@ class JobDog:
             timeout=self.timeout
         )
 
-    def fetch_details(self, url: str) -> Dict:
+    def fetch_details(self, url: str) -> JobListing:
         try:
             logger.info(f"Fetching details for {url}")
-            response = self.session.get(url)
+            parser: BaseParser = get_parser(url)
+            sanitized_url = parser.sanitize_url(url)
+            response = self.session.get(sanitized_url)
             response.raise_for_status()
-            return {"url": url, "content": response.text}
+            job_details: JobListing = parser.parse_html(response.text)
+            job_details.job_listing_url = sanitized_url
+            return job_details
         except Exception as e:
             logger.error(f"Error fetching {url}: {str(e)}")
             raise FetchError(f"Failed to fetch URL: {url}. Error: {str(e)}")
