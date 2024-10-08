@@ -26,7 +26,7 @@ class JobDog:
             response = self.session.get(url)
             response.raise_for_status()
             return {"url": url, "content": response.text}
-        except requests.RequestException as e:
+        except Exception as e:
             logger.error(f"Error fetching {url}: {str(e)}")
             raise FetchError(f"Failed to fetch URL: {url}. Error: {str(e)}")
 
