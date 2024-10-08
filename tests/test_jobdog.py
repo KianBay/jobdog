@@ -67,3 +67,11 @@ def test_context_manager(mock_session):
         pass
 
     mock_close.assert_called_once()
+
+
+def test_integration_fetch_details():
+    dog = JobDog()
+    result = dog.fetch_details("https://httpbin.org/get")
+
+    assert result["url"] == "https://httpbin.org/get"
+    assert "headers" in result["content"] 
