@@ -27,3 +27,13 @@ class JobDog:
         except requests.RequestException as e:
             logger.error(f"Error fetching {url}: {str(e)}")
             raise FetchError(f"Failed to fetch URL: {url}. Error: {str(e)}")
+
+    def close(self):
+        if self.session:
+            self.session.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
