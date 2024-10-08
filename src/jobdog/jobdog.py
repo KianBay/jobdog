@@ -4,7 +4,7 @@ from .exceptions import FetchError
 from .logger import logger
 
 class JobDog:
-    def __init__(self, impersonate: str = "chrome110", proxy: Optional[str] = None, headers: Optional[Dict[str, str]] = None, timeout: int = 30) -> None:
+    def __init__(self, impersonate: str = "chrome124", proxy: Optional[str] = None, headers: Optional[Dict[str, str]] = None, timeout: int = 30) -> None:
         self.impersonate = impersonate
         self.proxy = proxy
         self.headers = headers or {}
@@ -12,6 +12,7 @@ class JobDog:
         self.session = self._create_session()
 
     def _create_session(self) -> requests.Session:
+        logger.info(f"Creating session with impersonate: {self.impersonate}, proxy: {self.proxy}, headers: {self.headers}, timeout: {self.timeout}")
         return requests.Session(
             impersonate=self.impersonate,
             proxies={'http': self.proxy, 'https': self.proxy} if self.proxy else None,
@@ -21,6 +22,7 @@ class JobDog:
 
     def fetch_details(self, url: str) -> Dict:
         try:
+            logger.info(f"Fetching details for {url}")
             response = self.session.get(url)
             response.raise_for_status()
             return {"url": url, "content": response.text}
@@ -46,8 +48,10 @@ class JobDog:
 
 
     def close(self) -> None:
+        logger.info("Attempting to close session")
         if self.session:
             self.session.close()
+            logger.info("Session closed")
 
     def __enter__(self) -> "JobDog":
         return self
