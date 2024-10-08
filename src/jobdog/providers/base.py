@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Any
+from jobdog.models.job_listing import JobListing
+
 
 class BaseParser(ABC):
     @abstractmethod
@@ -7,5 +8,5 @@ class BaseParser(ABC):
         pass
 
     @abstractmethod
-    def parse_html(self, html: str) -> Dict[str, Any]:
+    def parse_html(self, html: str) -> JobListing:
         pass
