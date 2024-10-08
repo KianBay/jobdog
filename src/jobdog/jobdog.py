@@ -28,12 +28,29 @@ class JobDog:
             logger.error(f"Error fetching {url}: {str(e)}")
             raise FetchError(f"Failed to fetch URL: {url}. Error: {str(e)}")
 
-    def close(self):
+    def set_impersonate(self, impersonate: str) -> None:
+        self.impersonate = impersonate
+        self.session = self._create_session()
+
+    def set_proxy(self, proxy: Optional[str]) -> None:
+        self.proxy = proxy
+        self.session = self._create_session()
+
+    def set_headers(self, headers: Dict[str, str]) -> None:
+        self.headers.update(headers)
+        self.session.headers.update(headers)
+
+    def set_timeout(self, timeout: int) -> None:
+        self.timeout = timeout
+        self.session.timeout = timeout
+
+
+    def close(self) -> None:
         if self.session:
             self.session.close()
 
-    def __enter__(self):
+    def __enter__(self) -> "JobDog":
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
         self.close()
