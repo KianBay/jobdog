@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "jobdog"
+version = "0.1.0"
+description = "A simple library for fetching and parsing job listing details from various providers"
+authors = ["Kian Bay <59806136+KianBay@users.noreply.github.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+curl-cffi = "^0.7.2"
+selectolax = "^0.3.21"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+ruff = "^0.6.9"
+mypy = "^1.11.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
