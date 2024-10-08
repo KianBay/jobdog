@@ -83,9 +83,24 @@ def test_context_manager(mock_session):
     mock_close.assert_called_once()
 
 
-def test_integration_fetch_details():
+@patch('jobdog.jobdog.get_parser')
+def test_integration_fetch_details(mock_get_parser):
+    class HttpbinParser:
+        def sanitize_url(self, url):
+            return url
+        def parse_html(self, html):
+            import json
+            data = json.loads(html)
+            return JobListing(job_title="Httpbin Test", company_name="Httpbin", job_description="You will test!", job_listing_url="https://httpbin.org/get")
+
+    mock_get_parser.return_value = HttpbinParser()
+
     dog = JobDog()
     result = dog.fetch_details("https://httpbin.org/get")
 
-    assert result["url"] == "https://httpbin.org/get"
-    assert "headers" in result["content"] 
+    assert isinstance(result, JobListing)
+    assert result.job_title == "Httpbin Test"
+    assert result.company_name == "Httpbin"
+    assert result.job_description == "You will test!"
+    assert result.job_listing_url == "https://httpbin.org/get"
+
