@@ -11,10 +11,10 @@ JobDog is a Python library for fetching and parsing job listings from various jo
 
 ## Features Checklist
 
-- [ ] Standardized job listing output
+- [X] Standardized job listing output
 - [ ] Strategy pattern for site-specific parsing
-- [ ] Factory for selecting appropriate parsing strategy
+- [X] Factory for selecting appropriate parsing strategy
 - [ ] Error handling, retries mechanisms
-- [ ] Extensible architecture for adding new job board support
+- [X] Extensible architecture for adding new job board support
 - [ ] Documentation and usage examples
 - [ ] Python package distribution on PyPI
