@@ -38,9 +38,14 @@ def test_fetch_details_success(mock_session, mock_get_parser):
     assert result.job_listing_url == "https://example.com/job/123"
     mock_session.return_value.get.assert_called_once_with("https://example.com/job/123")
 
+@patch('jobdog.jobdog.get_parser')
 @patch('jobdog.jobdog.requests.Session')
-def test_fetch_details_error(mock_session):
+def test_fetch_details_error(mock_session, mock_get_parser):
     mock_session.return_value.get.side_effect = Exception("Connection error")
+
+    mock_parser = MagicMock()
+    mock_parser.sanitize_url.return_value = "https://example.com/job/123"
+    mock_get_parser.return_value = mock_parser
 
     dog = JobDog()
     with pytest.raises(FetchError, match="Failed to fetch URL: https://example.com/job/123. Error: Connection error"):
