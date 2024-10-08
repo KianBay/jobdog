@@ -10,6 +10,7 @@ readme = "README.md"
 python = "^3.12"
 curl-cffi = "^0.7.2"
 selectolax = "^0.3.21"
+pydantic = "^2.9.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.3"
