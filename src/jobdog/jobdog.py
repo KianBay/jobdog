@@ -1,33 +1,19 @@
 from typing import Optional, Dict
 from httpx import Client
-from .exceptions import FetchError
-from .logger import logger
-from .models.job_listing import JobListing
-from .providers.utils import get_parser
-from .providers.base import BaseParser
+from jobdog.exceptions import FetchError
+from jobdog.logger import logger
+from jobdog.models.job_listing import JobListing
+from jobdog.providers.utils import get_parser
+from jobdog.providers.base import BaseParser
+from jobdog.http_client import sync_http_client
 
 
 class JobDog:
     def __init__(
         self,
-        mounts: Optional[Dict[str, str]] = None,
-        headers: Optional[Dict[str, str]] = None,
-        timeout: int = 30,
+        http_client: Optional[Client] = None,
     ) -> None:
-        self.mounts = mounts or {}
-        self.headers = headers or {}
-        self.timeout = timeout
-        self.http_client = self._create_http_client()
-
-    def _create_http_client(self) -> Client:
-        logger.info(
-            f"Creating client: {self.mounts}, headers: {self.headers}, timeout: {self.timeout}"
-        )
-        return Client(
-            mounts=self.mounts,
-            headers=self.headers,
-            timeout=self.timeout,
-        )
+        self.http_client = http_client or sync_http_client
 
     def fetch_details(self, url: str) -> JobListing:
         try:
