@@ -2,17 +2,21 @@ from enum import StrEnum
 from pydantic import BaseModel, HttpUrl
 from typing import Optional
 
+
 class LocationType(StrEnum):
     REMOTE = "remote"
     ONSITE = "onsite"
     HYBRID = "hybrid"
 
+
 class ExperienceLevel(StrEnum):
     INTERN = "intern"
+    ENTRY = "entry"
     JUNIOR = "junior"
     MID = "mid"
     SENIOR = "senior"
     EXECUTIVE = "executive"
+
 
 class EmploymentType(StrEnum):
     FULL_TIME = "full_time"
@@ -21,6 +25,7 @@ class EmploymentType(StrEnum):
     TEMPORARY = "temporary"
     VOLUNTEER = "volunteer"
     INTERNSHIP = "internship"
+
 
 class JobListing(BaseModel):
     job_title: str
@@ -38,4 +43,3 @@ class JobListing(BaseModel):
     job_expiry_date: Optional[str] = None
     skills: Optional[list[str]] = None
     industry: Optional[str] = None
-    
