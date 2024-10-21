@@ -9,28 +9,25 @@ class JobIndexParser(BaseParser):
     def sanitize_url(self, url: str) -> str:
         debug(f"Sanitizing JobIndex job URL: {url}")
         parsed_url = urlparse(url)
-        path = parsed_url.path
-        try:
-            path_parts = path.split("/")
-            for part in path_parts:
-                if (
-                    part.startswith("r")
-                    and part[1:].isdigit()
-                    or part.startswith("h")
-                    and part[1:].isdigit()
-                ):
-                    job_id = part
-                    debug(f"Extracted job ID {job_id} from path")
-                    new_path = f"/jobannonce/{job_id}"
-                    new_parsed = parsed_url._replace(
-                        path=new_path, query="", fragment=""
-                    )
-                    sanitized_url = urlunparse(new_parsed)
-                    info(f"Sanitized JobIndex job URL: {sanitized_url}")
-                    return sanitized_url
+        path_parts = parsed_url.path.split("/")
 
-            warn(f"Unable to extract job ID from JobIndex URL: {url}")
-            raise JobDogSanitizeUrlError(f"Invalid JobIndex job URL: {url}")
+        try:
+            if len(path_parts) < 3 or path_parts[1] != "jobannonce":
+                raise JobDogSanitizeUrlError(f"Invalid JobIndex job URL: {url}")
+
+            job_id = path_parts[2]
+            if (
+                not (job_id.startswith("r") or job_id.startswith("h"))
+                or not job_id[1:].isdigit()
+            ):
+                raise JobDogSanitizeUrlError(f"Invalid job ID in URL: {url}")
+
+            new_path = f"/jobannonce/{job_id}"
+            new_parsed = parsed_url._replace(path=new_path, query="", fragment="")
+            sanitized_url = urlunparse(new_parsed)
+            info(f"Sanitized JobIndex job URL: {sanitized_url}")
+            return sanitized_url
+
         except Exception as e:
             error(f"Error sanitizing JobIndex job URL: {url}. Error: {str(e)}")
             raise JobDogSanitizeUrlError(
