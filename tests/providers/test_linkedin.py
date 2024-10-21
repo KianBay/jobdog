@@ -1,8 +1,9 @@
 import pytest
-
+from jobdog.logger import logger
 from jobdog.providers.linkedin import LinkedInParser
 from jobdog.models.job_listing import JobListing
 from jobdog.jobdog import JobDog
+from tests.conftest import cassette_id_func
 
 
 LINKEDIN_URL_TEST_CASES = [
@@ -29,3 +30,27 @@ LINKEDIN_URL_TEST_CASES = [
 def test_linkedin_sanitize_url(url: str, expected_url: str):
     parser = LinkedInParser()
     assert parser.sanitize_url(url) == expected_url
+
+
+@pytest.mark.parametrize(
+    "long_url, expected_url", LINKEDIN_URL_TEST_CASES, ids=cassette_id_func
+)
+@pytest.mark.vcr()
+def test_linkedin_parse_html(long_url, expected_url):
+    parser = LinkedInParser()
+    dog = JobDog()
+
+    logger.info(f"Fetching job listing from {expected_url}")
+
+    response = dog.http_client.get(expected_url)
+
+    logger.info(f"Response status code: {response.status_code}")
+
+    job_listing = parser.parse_html(response.text)
+
+    assert isinstance(job_listing, JobListing)
+    assert job_listing.job_title
+    assert job_listing.company_name
+    assert job_listing.job_description
+
+    logger.info(f"Parsed job listing: {job_listing}")
