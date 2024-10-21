@@ -4,6 +4,7 @@ from jobdog.logger import logger
 from jobdog.models.job_listing import JobListing
 from jobdog.jobdog import JobDog
 from jobdog.providers.jobindex import JobIndexParser
+from jobdog.http_client import sync_http_client
 from tests.conftest import cassette_id_func
 
 JOBINDEX_SHORT_URLS = {
@@ -33,7 +34,16 @@ JOBINDEX_PARSE_TEST_CASES = [
             "location": "2880 Bagsværd",
             "job_posting_date": "2024-10-18",
         },
-    )
+    ),
+    (
+        JOBINDEX_SHORT_URLS["arla"],
+        {
+            "job_title": "International Export Manager, Distributor Sales - Copenhagen",
+            "company_name": "Arla Foods",
+            "job_description": "As the new International Export Manager, your main role will be to ensure exceptional sales performance and build branded positions in your market cluster.",
+            "location": "Copenhagen",
+        },
+    ),
 ]
 
 
@@ -63,4 +73,9 @@ def test_jobindex_sanitize_url_error(invalid_url: str):
 @pytest.mark.vcr()
 def test_linkedin_parse_html(url, expected_data):
     parser = JobIndexParser()
-    dog = JobDog()
+    resp = sync_http_client.get(url)
+    job_listing = parser.parse_html(resp.text)
+    assert isinstance(job_listing, JobListing)
+    assert job_listing.job_title == expected_data["job_title"]
+    assert job_listing.company_name == expected_data["company_name"]
+    assert expected_data["job_description"] in job_listing.job_description
