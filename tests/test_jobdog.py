@@ -7,30 +7,27 @@ from unittest.mock import patch, MagicMock
 
 def test_jobdog_initialization():
     dog = JobDog()
-    assert dog.impersonate == "chrome124"
-    assert dog.proxies == {}
+    assert dog.mounts == {}
     assert dog.headers == {}
     assert dog.timeout == 30
 
 
 def test_jobdog_custom_initialization():
     dog = JobDog(
-        impersonate="firefox110",
-        proxies={"http": "http://myproxy:8080", "https": "http://myproxy:8080"},
+        mounts={"http://": "http://myproxy:8080", "https://": "http://myproxy:8080"},
         headers={"User-Agent": "MyBot"},
         timeout=60,
     )
-    assert dog.impersonate == "firefox110"
-    assert dog.proxies == {
-        "http": "http://myproxy:8080",
-        "https": "http://myproxy:8080",
+    assert dog.mounts == {
+        "http://": "http://myproxy:8080",
+        "https://": "http://myproxy:8080",
     }
     assert dog.headers == {"User-Agent": "MyBot"}
     assert dog.timeout == 60
 
 
 @patch("jobdog.jobdog.get_parser")
-@patch("jobdog.jobdog.requests.Session")
+@patch("jobdog.jobdog.Client")
 def test_fetch_details_success(mock_session, mock_get_parser):
     mock_response = MagicMock()
     mock_response.text = "<html>Job details</html>"
@@ -56,7 +53,7 @@ def test_fetch_details_success(mock_session, mock_get_parser):
 
 
 @patch("jobdog.jobdog.get_parser")
-@patch("jobdog.jobdog.requests.Session")
+@patch("jobdog.jobdog.Client")
 def test_fetch_details_error(mock_session, mock_get_parser):
     mock_session.return_value.get.side_effect = Exception("Connection error")
 
@@ -72,18 +69,14 @@ def test_fetch_details_error(mock_session, mock_get_parser):
         dog.fetch_details("https://example.com/job/123")
 
 
-def test_set_impersonate():
+def test_set_mounts():
     dog = JobDog()
-    dog.set_impersonate("firefox110")
-    assert dog.impersonate == "firefox110"
-
-
-def test_set_proxy():
-    dog = JobDog()
-    dog.set_proxies({"http": "http://newproxy:8080", "https": "http://newproxy:8080"})
-    assert dog.proxies == {
-        "http": "http://newproxy:8080",
-        "https": "http://newproxy:8080",
+    dog.set_mounts(
+        {"http://": "http://newproxy:8080", "https://": "http://newproxy:8080"}
+    )
+    assert dog.mounts == {
+        "http://": "http://newproxy:8080",
+        "https://": "http://newproxy:8080",
     }
 
 
@@ -100,7 +93,7 @@ def test_set_timeout():
     assert dog.timeout == 45
 
 
-@patch("jobdog.jobdog.requests.Session")
+@patch("jobdog.jobdog.Client")
 def test_context_manager(mock_session):
     mock_close = MagicMock()
     mock_session.return_value.close = mock_close
