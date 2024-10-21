@@ -4,8 +4,10 @@ from jobdog.exceptions import JobDogSanitizeUrlError, ParserError
 from jobdog.logger import debug, info, warn, error
 from jobdog.models.job_listing import JobListing
 from jobdog.providers.base import BaseParser
+from jobdog.providers.utils import register_parser
 
 
+@register_parser("jobindex.dk")
 class JobIndexParser(BaseParser):
     def sanitize_url(self, url: str) -> str:
         debug(f"Sanitizing JobIndex job URL: {url}")
