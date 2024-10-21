@@ -71,7 +71,7 @@ def test_jobindex_sanitize_url_error(invalid_url: str):
     "url, expected_data", JOBINDEX_PARSE_TEST_CASES, ids=cassette_id_func
 )
 @pytest.mark.vcr()
-def test_linkedin_parse_html(url, expected_data):
+def test_jobindex_parse_html(url, expected_data):
     parser = JobIndexParser()
     resp = sync_http_client.get(url)
     job_listing = parser.parse_html(resp.text)
