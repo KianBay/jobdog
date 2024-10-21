@@ -1,4 +1,5 @@
 import pytest
+from jobdog.exceptions import JobDogSanitizeUrlError
 from jobdog.logger import logger
 from jobdog.models.job_listing import JobListing
 from jobdog.jobdog import JobDog
@@ -37,9 +38,23 @@ JOBINDEX_PARSE_TEST_CASES = [
 
 
 @pytest.mark.parametrize("url, expected_url", JOBINDEX_URL_TEST_CASES)
-def test_jobindex_sanitize_url(url: str, expected_url: str):
+def test_jobindex_sanitize_url_success(url: str, expected_url: str):
     parser = JobIndexParser()
     assert parser.sanitize_url(url) == expected_url
+
+
+@pytest.mark.parametrize(
+    "invalid_url",
+    [
+        "https://www.example.com/not-jobindex",
+        "https://www.jobindex.dk/vis-job/r12800344",
+        "https://www.jobindex.dk/jobannonce/invalid-job-id",
+    ],
+)
+def test_jobindex_sanitize_url_error(invalid_url: str):
+    parser = JobIndexParser()
+    with pytest.raises(JobDogSanitizeUrlError):
+        parser.sanitize_url(invalid_url)
 
 
 @pytest.mark.parametrize(
