@@ -79,8 +79,31 @@ def test_jobindex_parse_html(url, expected_data):
     logger.info(f"Response text length: {len(resp.text)}")
 
     job_listing = parser.parse_html(resp.text)
-    logger.info(f"Job listing: {job_listing}")
     assert isinstance(job_listing, JobListing)
     assert job_listing.job_title == expected_data["job_title"]
     assert job_listing.company_name == expected_data["company_name"]
     assert expected_data["job_description"] in job_listing.job_description
+
+
+@pytest.mark.integration
+@pytest.mark.parametrize(
+    "url, expected_data", JOBINDEX_PARSE_TEST_CASES, ids=cassette_id_func
+)
+@pytest.mark.vcr()
+def test_jobindex_integration(url, expected_data):
+    jobdog = JobDog()
+    job_listing = jobdog.fetch_details(url)
+
+    assert isinstance(job_listing, JobListing)
+    assert job_listing.job_title == expected_data["job_title"]
+    assert job_listing.company_name == expected_data["company_name"]
+    assert expected_data["job_description"] in job_listing.job_description
+
+    assert len(job_listing.job_description) > 500
+
+    if "Novo Nordisk" in job_listing.company_name:
+        assert "Pilot Scientist" in job_listing.job_description
+        assert "GMP" in job_listing.job_description
+    elif "Arla Foods" in job_listing.company_name:
+        assert "Distributor Sales" in job_listing.job_description
+        assert "FMCG" in job_listing.job_description

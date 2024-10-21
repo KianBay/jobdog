@@ -1,0 +1,55 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - www.linkedin.com
+      user-agent:
+      - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML,
+        like Gecko) Version/17.6 Safari/605.1.1
+    method: GET
+    uri: https://www.linkedin.com/jobs/view/3915648739/
+  response:
+    body:
+      string: ''
+    headers:
+      CF-Cache-Status:
+      - DYNAMIC
+      CF-RAY:
+      - 8d64d61fbee8abd8-CPH
+      Cache-Control:
+      - no-cache, no-store
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Date:
+      - Mon, 21 Oct 2024 22:55:39 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 GMT
+      Pragma:
+      - no-cache
+      Server:
+      - cloudflare
+      Set-Cookie:
+      - __cf_bm=fcmxtBtf0ZyaaOkqaDpVrnz_T2N9nadwo4TTk0_9HF0-1729551339-1.0.1.1-p7fO5x9d.eKA8H5yUiiKkAJXNwgXYC.8WY.pFGk_JJijYx2SrG1ojT9S2sozMz3e3fxeSl498dhyX3WfkroOog;
+        path=/; expires=Mon, 21-Oct-24 23:25:39 GMT; domain=.linkedin.com; HttpOnly;
+        Secure; SameSite=None
+      X-LI-UUID:
+      - AAYlBI020qlojQw7GSCHVQ==
+      X-Li-Fabric:
+      - prod-lva1
+      X-Li-Pop:
+      - cf-prod-lva1-x
+      X-Li-Proto:
+      - http/1.1
+    status:
+      code: 429
+      message: Request denied
+version: 1
