@@ -74,7 +74,12 @@ def test_jobindex_sanitize_url_error(invalid_url: str):
 def test_jobindex_parse_html(url, expected_data):
     parser = JobIndexParser()
     resp = sync_http_client.get(url)
+
+    logger.info(f"Response code: {resp.status_code}")
+    logger.info(f"Response text length: {len(resp.text)}")
+
     job_listing = parser.parse_html(resp.text)
+    logger.info(f"Job listing: {job_listing}")
     assert isinstance(job_listing, JobListing)
     assert job_listing.job_title == expected_data["job_title"]
     assert job_listing.company_name == expected_data["company_name"]
