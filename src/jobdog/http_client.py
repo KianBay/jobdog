@@ -2,6 +2,7 @@ import random
 from typing import Optional
 from httpx import Client
 
+
 USER_AGENTS = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.3",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.3",
@@ -24,7 +25,7 @@ def create_default_client(
         default_headers["User-Agent"] = _get_random_user_agent()
 
     return Client(
-        mounts=mounts or {},
+        mounts=mounts,
         headers=default_headers,
         timeout=timeout,
     )

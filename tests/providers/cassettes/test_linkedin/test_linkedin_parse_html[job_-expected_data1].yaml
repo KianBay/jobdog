@@ -1,0 +1,64 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      cookie:
+      - __cf_bm=37RDIQeo.TYNtTG0yUBelzVUUCaihlIvDrWVIbgQrWw-1729541830-1.0.1.1-Xqe7cL.VnJe_D_r10hZsHalh3kPK2XZ_i1au59PljBbGLjvw8pY_cBDbKeSmAbDkcb3tK1AeaU1ZCfz1rRqabA
+      host:
+      - www.linkedin.com
+      user-agent:
+      - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML,
+        like Gecko) Version/17.6 Safari/605.1.1
+    method: GET
+    uri: https://www.linkedin.com/jobs/view/4053542511/
+  response:
+    body:
+      string: "<html><head>\n<script type=\"text/javascript\">\n    window.onload
+        = function() {\n      var trk = \"qf\";\n      var cookies = document.cookie.split(\";
+        \");\n\n      if (window.location.protocol == \"http:\") {\n        // If
+        \"sl\" cookie is set, redirect to https.\n        for (var i = 0; i < cookies.length;
+        ++i) {\n          if ((cookies[i].indexOf(\"sl=\") == 0) && (cookies[i].length
+        > 3)) {\n            window.location.href = \"https:\" + window.location.href.substring(window.location.protocol.length);\n
+        \           return;\n          }\n        }\n      }\n\n      window.location.href
+        = \"https://www.linkedin.com/authwall?trk=\" + trk +\n          \"&original_referer=\"
+        + document.referrer.substr(0, 200) +\n          \"&sessionRedirect=\" + encodeURIComponent(window.location.href);\n
+        \   }\n</script>\n</head></html>"
+    headers:
+      CF-Cache-Status:
+      - DYNAMIC
+      CF-RAY:
+      - 8d63edfb989992f8-CPH
+      Cache-Control:
+      - no-cache, no-store
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '792'
+      Content-Type:
+      - text/html
+      Date:
+      - Mon, 21 Oct 2024 20:17:11 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 GMT
+      Pragma:
+      - no-cache
+      Server:
+      - cloudflare
+      X-LI-UUID:
+      - AAYlAlZ28BUCjjzr/BcVWA==
+      X-Li-Fabric:
+      - prod-ltx1
+      X-Li-Pop:
+      - cf-prod-ltx1-x
+      X-Li-Proto:
+      - http/1.1
+    status:
+      code: 429
+      message: Request denied
+version: 1
