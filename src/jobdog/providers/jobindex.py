@@ -1,3 +1,4 @@
+from typing import Optional
 from selectolax.parser import HTMLParser
 from urllib.parse import urlparse, urlunparse
 from jobdog.exceptions import JobDogSanitizeUrlError, ParserError
@@ -43,7 +44,7 @@ class JobIndexParser(BaseParser):
         job_title = self._extract_job_title(tree)
         company_name = self._extract_company_name(tree)
         job_description = self._extract_job_description(tree)
-
+        location = self._extract_location(tree)
         if not all([job_title, company_name, job_description]):
             raise ParserError("Failed to extract required fields from HTML")
 
@@ -51,6 +52,7 @@ class JobIndexParser(BaseParser):
             job_title=job_title,
             company_name=company_name,
             job_description=job_description,
+            location=location,
         )
 
     def _extract_job_title(self, tree: HTMLParser) -> str:
@@ -93,3 +95,16 @@ class JobIndexParser(BaseParser):
             return description.strip()
 
         raise ParserError("Failed to extract job description")
+
+    def _extract_location(self, tree: HTMLParser) -> Optional[list[str]]:
+        location_elem = tree.css_first(".jobtext-jobad__place-item")
+        if location_elem:
+            location = location_elem.text().strip()
+            return [location] if location else None
+
+        location_elem = tree.css_first(".location > p:nth-child(1)")
+        if location_elem:
+            location = location_elem.text().strip()
+            return [location] if location else None
+
+        return None

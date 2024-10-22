@@ -33,7 +33,7 @@ class JobListing(BaseModel):
     job_description: str
     job_function: Optional[str] = None
     job_listing_url: Optional[HttpUrl] = None
-    location: Optional[str] = None
+    location: Optional[list[str]] = None
     location_type: Optional[LocationType] = None
     employment_type: Optional[EmploymentType] = None
     experience_level: Optional[ExperienceLevel] = None
