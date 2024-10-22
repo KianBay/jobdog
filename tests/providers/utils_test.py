@@ -20,13 +20,13 @@ def test_register_and_get_parser():
         def parse_html(self, html):
             return {"title": "Example Job"}
 
-
     assert "example.com" in PARSER_MAP
-
 
     parser = get_parser("https://example.com/job/123")
     assert isinstance(parser, ExampleParser)
 
+    parser = get_parser("https://jobs.example.com/job/123")
+    assert isinstance(parser, ExampleParser)
 
     with pytest.raises(UnsupportedProviderError):
         get_parser("https://unknown.com/job/123")
