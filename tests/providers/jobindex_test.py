@@ -31,7 +31,7 @@ JOBINDEX_PARSE_TEST_CASES = [
             "job_title": "Pilot Scientist for Purification",
             "company_name": "Novo Nordisk A/S",
             "job_description": "As Pilot Scientist you are responsible for driving production campaigns in the facility. That includes planning, dimensioning",
-            "location": "2880 Bagsværd",
+            "location": ["2880 Bagsværd"],
             "job_posting_date": "2024-10-18",
         },
     ),
@@ -41,7 +41,7 @@ JOBINDEX_PARSE_TEST_CASES = [
             "job_title": "International Export Manager, Distributor Sales - Copenhagen",
             "company_name": "Arla Foods",
             "job_description": "As the new International Export Manager, your main role will be to ensure exceptional sales performance and build branded positions in your market cluster.",
-            "location": "Copenhagen",
+            "location": ["Copenhagen"],
         },
     ),
 ]
@@ -83,6 +83,7 @@ def test_jobindex_parse_html(url, expected_data):
     assert job_listing.job_title == expected_data["job_title"]
     assert job_listing.company_name == expected_data["company_name"]
     assert expected_data["job_description"] in job_listing.job_description
+    assert expected_data["location"][0] == job_listing.location[0]
 
 
 @pytest.mark.integration
@@ -93,7 +94,7 @@ def test_jobindex_parse_html(url, expected_data):
 def test_jobindex_integration(url, expected_data):
     jobdog = JobDog()
     job_listing = jobdog.fetch_details(url)
-
+    logger.info(job_listing.location)
     assert isinstance(job_listing, JobListing)
     assert job_listing.job_title == expected_data["job_title"]
     assert job_listing.company_name == expected_data["company_name"]
