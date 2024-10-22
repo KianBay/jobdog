@@ -73,18 +73,10 @@ class GreenhouseParser(BaseParser):
             if job_title:
                 return job_title
 
-        title_elem = tree.css_first("title")
+        title_elem = tree.css_first("div.job__title h1")
         if not title_elem:
             raise ParserError("Failed to find title element")
-        # elem is "Job Application for <job title> at <company name>"
-        full_title = title_elem.text().strip()
-        if full_title.startswith("Job Application for "):
-            full_title = full_title[len("Job Application for ") :]
-
-        parts = full_title.split(" at ")
-        if len(parts) < 2:
-            raise ParserError(f"Unexpected title format: {full_title}")
-        job_title = " at ".join(parts[:-1]).strip()
+        job_title = title_elem.text().strip()
         if job_title:
             return job_title
         raise ParserError("Failed to extract job title")
@@ -119,7 +111,9 @@ class GreenhouseParser(BaseParser):
         if json_ld:
             job_description = json_ld.get("description")
             if job_description:
-                return unescape(job_description)
+                unescaped = unescape(job_description)
+                # we might need to use a better method than regex'ing out html shit
+                return re.sub(r"<[^>]+>", "", unescaped)
 
         description_div = tree.css_first("div.job__description.body")
         if not description_div:
