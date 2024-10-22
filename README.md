@@ -50,11 +50,9 @@ Coming soon:
 
 ## 🦴 Installation
 
-```bash
-pip install jobdog
-```
 
-Proper instructions to come - if you for some reason want to install it now, use poetry.
+
+Proper instructions to come - if you for some reason want to install it now, you probably now what to do.
 
 
 
