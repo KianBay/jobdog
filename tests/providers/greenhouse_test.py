@@ -88,3 +88,20 @@ def test_greenhouse_parse_html(url: str, expected_data: dict):
     )
     for i, location in enumerate(expected_data["location"]):
         assert location == job_listing.location[i]
+
+
+@pytest.mark.integration
+@pytest.mark.parametrize(
+    "url, expected_data", GREENHOUSE_PARSE_TEST_CASES, ids=cassette_id_func
+)
+@pytest.mark.vcr()
+def test_greenhouse_integration(url: str, expected_data: dict):
+    jobdog = JobDog()
+    job_listing = jobdog.fetch_details(url)
+
+    assert isinstance(job_listing, JobListing)
+    assert job_listing.job_title == expected_data["job_title"]
+    assert job_listing.company_name == expected_data["company_name"]
+    assert expected_data["job_description"] in job_listing.job_description
+    for i, location in enumerate(expected_data["location"]):
+        assert location == job_listing.location[i]
