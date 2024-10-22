@@ -1,9 +1,9 @@
 from urllib.parse import urlparse
-from typing import Dict, Type
-from .base import BaseParser
-from ..exceptions import UnsupportedProviderError
+from typing import Type
+from jobdog.exceptions import UnsupportedProviderError
+from jobdog.providers.base import BaseParser
 
-PARSER_MAP: Dict[str, Type[BaseParser]] = {}
+PARSER_MAP: dict[str, Type[BaseParser]] = {}
 
 
 def register_parser(domain: str):
@@ -18,10 +18,9 @@ def get_parser(url: str) -> BaseParser:
     parsed_url = urlparse(url)
     domain = parsed_url.netloc.lower()
 
-    if domain.startswith("www."):
-        domain = domain[4:]
+    main_domain = ".".join(domain.split(".")[-2:])
 
-    parser_class = PARSER_MAP.get(domain)
+    parser_class = PARSER_MAP.get(main_domain)
     if parser_class is None:
-        raise UnsupportedProviderError(f"No parser found for domain: {domain}")
+        raise UnsupportedProviderError(f"No parser found for domain: {main_domain}")
     return parser_class()
